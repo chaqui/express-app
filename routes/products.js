@@ -3,22 +3,23 @@ const ProductService = require('./../services/product.service.js')
 const router = express.Router();
 const service = new ProductService();
 
-router.get('/', (req, res) => {
-  let products = service.find();
+router.get('/', async (req, res) => {
+  let products = await service.find();
   res.status(200).json(products);
 });
 
-router.post('/',(req,res)=>{
+router.post('/', async(req,res)=>{
   const body = req.body;
-  service.create(body);
+  const newProduct = await service.create(body);
   res.status(201).json({
     massage: 'Created',
-    data:body
+
+    data:newProduct
   });
 });
 
 
-router.put('/:id',(req,res)=>{
+router.put('/:id', async(req,res)=>{
   const id = req.params.id
   const body = req.body;
   console.log(body);
@@ -31,32 +32,37 @@ router.put('/:id',(req,res)=>{
 
 
 
-router.patch('/:id',(req,res)=>{
-  const {id} = req.params;
-  const body = req.body;
-  console.log(body);
-  res.json({
-    massage: 'Modified',
-    id,
-    data:body
-  });
+router.patch('/:id', async (req,res, next)=>{
+  try{
+    const {id} = req.params;
+    const body = req.body;
+    const product = await service.update(id,body);
+    res.json(product);
+  }
+  catch(err){
+    next(err);
+  }
 });
 
-router.delete('/:id',(req,res)=>{
-
-  const {id} = req.params;
-  res.json({
-    message:"Delete",
-    id
-  });
+router.delete('/:id', async(req,res, next)=>{
+  try{
+    const {id} = req.params;
+    const r = await service.delete(id);
+    res.json(r);
+  }catch(err){
+    next(err);
+  }
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async(req, res,next) => {
 
-  const {id} = req.params;
-  product = service.findOne(id)
-	if(!product) res.status(404).send('The product with the given ID was not found');
-	res.status(200).json(product);
+  try{
+    const {id} = req.params;
+    product = await service.findOne(id)
+    res.json(product);
+  }catch(err){
+    next(err);
+  }
 });
 
 
