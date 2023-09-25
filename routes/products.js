@@ -1,5 +1,8 @@
 const express = require('express');
 const ProductService = require('./../services/product.service.js')
+const validatorHandler = require('./../middlewares/validator.handler.js');
+const  { createProductSchema, updateProductSchema, getProductSchema}= require('./../schemas/product.schema.js');
+
 const router = express.Router();
 const service = new ProductService();
 
@@ -19,13 +22,14 @@ router.post('/', async(req,res)=>{
 });
 
 
-router.put('/:id', async(req,res)=>{
-  const id = req.params.id
-  const body = req.body;
-  console.log(body);
-  res.json({
-    massage: 'Modified',
-    id,
+router.put('/:id',
+  async(req,res)=>{
+    const id = req.params.id
+    const body = req.body;
+    console.log(body);
+    res.json({
+      massage: 'Modified',
+      id,
     data:body
   });
 });
@@ -54,16 +58,18 @@ router.delete('/:id', async(req,res, next)=>{
   }
 })
 
-router.get('/:id', async(req, res,next) => {
+router.get('/:id',
+  validatorHandler(getProductSchema, 'params'),
+  async(req, res,next) => {
 
-  try{
-    const {id} = req.params;
-    product = await service.findOne(id)
-    res.json(product);
-  }catch(err){
-    next(err);
-  }
-});
+    try{
+      const {id} = req.params;
+      product = await service.findOne(id)
+      res.json(product);
+    }catch(err){
+      next(err);
+    }
+  });
 
 
 
