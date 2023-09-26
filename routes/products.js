@@ -11,7 +11,9 @@ router.get('/', async (req, res) => {
   res.status(200).json(products);
 });
 
-router.post('/', async(req,res)=>{
+router.post('/',
+  validatorHandler(createProductSchema, 'body'),
+  async(req,res)=>{
   const body = req.body;
   const newProduct = await service.create(body);
   res.status(201).json({
@@ -36,7 +38,10 @@ router.put('/:id',
 
 
 
-router.patch('/:id', async (req,res, next)=>{
+router.patch('/:id',
+  validatorHandler(getProductSchema, 'params'),
+  validatorHandler(updateProductSchema, 'body'),
+  async (req,res, next)=>{
   try{
     const {id} = req.params;
     const body = req.body;
