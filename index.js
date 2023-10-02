@@ -19,6 +19,6 @@ app.use(boomErrorHandler);
 app.use(errorHandler);
 app.use(cors());
 app.listen(port, ()=>{
-	console.log("Server is running on port 3000");
+	console.log("Server is running on port "+port);
   swaggerDocs(app,port);
 })
