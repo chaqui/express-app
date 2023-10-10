@@ -69,7 +69,7 @@ router.get('/:id',
 
     try{
       const {id} = req.params;
-      product = await service.findOne(id)
+      const product = await service.findOne(id)
       res.json(product);
     }catch(err){
       next(err);
