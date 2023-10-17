@@ -5,6 +5,7 @@ const routerApi = require('./routes');
 const {swaggerDocs} = require('./swagger')
 const {logErrors,errorHandler,boomErrorHandler, ormErrorHandler} = require('./middlewares/error.handler');
 const {checkApiKey} = require('./middlewares/auth.handler');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -19,7 +20,11 @@ app.use(ormErrorHandler);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 app.use(cors());
+require('./utils/auth')
+
 app.listen(port, ()=>{
 	console.log("Server is running on port "+port);
   swaggerDocs(app,port);
 })
+
+

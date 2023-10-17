@@ -9,7 +9,8 @@ const config = {
   dbName: process.env.DB_NAME || 'my_store',
   dbPort: process.env.DB_PORT || 5432, //para postgres
   //dbPort: process.env.DB_PORT || 3306, //para mysql
-  apiKey: process.env.API_KEY || '123'
+  apiKey: process.env.API_KEY || '123',
+  jwtSecret: process.env.JSON_SECRET || 'IkZ2mUvRO6h7MxgAWjpEifVNC9zeQP3T'
 }
 
 module.exports = { config };

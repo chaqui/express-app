@@ -14,8 +14,8 @@ class UserService{
 
     async create(data){
         data.password = await bcrypt.hash(data.password, 10);
-        console.log(data);
         const rta = await models.User.create(data);
+        delete rta.dataValues.password;
         return rta;
 
     }
@@ -38,6 +38,14 @@ class UserService{
       const userExist = await this.findOne(id);
       await userExist.destroy();
       return {id};
+    }
+
+    async findByEmail(email){
+      const user = await models.User.findOne({where: {email}});
+      if(user){
+        return user;
+      }
+      throw boom.notFound('User not found');
     }
 }
 
